@@ -1,6 +1,6 @@
 {
-  "name": "smqide",
-  "productName": "SMQIDE",
+  "name": "IDESMQ",
+  "productName": "IDESMQ",
   "version": "0.5.0",
   "description": "IDE leve e minimalista para desenvolvimento front end",
   "author": "samequemarques",
@@ -22,8 +22,8 @@
     "release:linux": "npm run icons && npm run build:renderer && electron-builder --linux --publish always"
   },
   "build": {
-    "appId": "com.samequemarques.smqide",
-    "productName": "SMQIDE",
+    "appId": "com.samequemarques.idesmq",
+    "productName": "IDESMQ",
     "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
     "directories": {
       "output": "release",
@@ -82,8 +82,8 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "samequemarques",
-        "repo": "smqide",
+        "owner": "SamequeMarques0",
+        "repo": "IDESMQ",
         "releaseType": "release"
       }
     ]
