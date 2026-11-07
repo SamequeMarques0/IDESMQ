@@ -911,16 +911,31 @@ async function init() {
       const buttons = items.map((item) => {
         const b = document.createElement("button");
         b.className = "menu-item option" + (item.id === getCurrent() ? " selected" : "");
-        b.innerHTML = `<span class="opt-left">${item.preview ?? ""}<span class="opt-name"></span></span><span class="opt-check">✓</span>`;
+        b.innerHTML = `<span class="opt-left">${item.preview ?? ""}<span class="opt-name"></span></span><kbd></kbd>`;
         b.querySelector(".opt-name").textContent = item.name;
         b.addEventListener("click", () => {
+          closePopover();
           onPick(item.id);
-          buttons.forEach((x, i) => x.classList.toggle("selected", items[i].id === item.id));
         });
-        box.appendChild(b);
         return b;
       });
+      box.append(...buttons);
     };
+
+    section(
+      "Tema da interface",
+      Object.entries(THEMES).map(([id, t]) => ({ id, name: t.name })),
+      () => settings.theme,
+      setTheme
+    );
+    section(
+      "Pacote de ícones",
+      ICON_PACKS,
+      () => settings.icons,
+      setIcons
+    );
+    return box;
+  }
 
     const separator = () => {
       const sep = document.createElement("div");
