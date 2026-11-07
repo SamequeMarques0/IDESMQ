@@ -283,7 +283,10 @@ button:focus-visible {
 .term-in { color: var(--accent); }
 
 .term-bar {
+<<<<<<< HEAD
   position: relative;
+=======
+>>>>>>> 59cd7c52025fd43fb035406738230164d3448db3
   display: flex;
   align-items: center;
   gap: 8px;
@@ -558,6 +561,7 @@ body.dragging iframe { pointer-events: none; }
 .dialog-hint { color: var(--muted); font-size: 12px; }
 .dialog-hint code { color: var(--accent); font-family: var(--mono); }
 .dialog-error { color: var(--danger); font-size: 12px; }
+<<<<<<< HEAD
 
 /* ---------- Progresso do comando em execução ---------- */
 
@@ -626,3 +630,5 @@ body.dragging iframe { pointer-events: none; }
 @media (prefers-reduced-motion: reduce) {
   .term-progress.indeterminate > div { width: 100%; opacity: 0.5; }
 }
+=======
+>>>>>>> 59cd7c52025fd43fb035406738230164d3448db3

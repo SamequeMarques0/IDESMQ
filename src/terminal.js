@@ -3,13 +3,18 @@ import { api } from "./api.js";
 import { FitAddon } from "@xterm/addon-fit";
 import "@xterm/xterm/css/xterm.css";
 
+<<<<<<< HEAD
 // Sequências de controle (cores, cursor, título da janela) que não devem aparecer como texto
 const ANSI = /\x1b\[[0-9;?]*[ -/]*[@-~]|\x1b\][^\x07\x1b]*(?:\x07|\x1b\\)/g;
+=======
+const ANSI = /\x1b\[[0-9;?]*[ -/]*[@-~]/g;
+>>>>>>> 59cd7c52025fd43fb035406738230164d3448db3
 const MAX_NODES = 3000;
 const SIMPLE_NOTICE =
   "Modo simples: o terminal completo (node-pty) não carregou. " +
   "Rode `npm run rebuild` na pasta da IDE e reinicie para ativá-lo.\n\n";
 
+<<<<<<< HEAD
 /* ---------- Leitura da saída: porcentagem e última linha ---------- */
 
 // Procura porcentagens ("45%", "100% | electron") e a última linha útil de um trecho da saída
@@ -129,15 +134,21 @@ function createActivity({ progress, fill, status, stopBtn, onChange, onStop }) {
   };
 }
 
+=======
+>>>>>>> 59cd7c52025fd43fb035406738230164d3448db3
 /*
  * Terminal da barra inferior.
  * - Com node-pty: terminal completo (xterm.js), e o campo da barra envia comandos para ele.
  * - Sem node-pty: modo simples, que roda um comando por vez e mostra a saída.
  */
+<<<<<<< HEAD
 export async function createTerminal({
   panel, out, xtermBox, input, promptEl, home, platform,
   progress, progressFill, status, stopBtn, onEscape, onBusyChange,
 }) {
+=======
+export async function createTerminal({ panel, out, xtermBox, input, promptEl, home, platform, onEscape }) {
+>>>>>>> 59cd7c52025fd43fb035406738230164d3448db3
   const usePty = await api.ptyAvailable();
 
   let cwd = home;
@@ -147,6 +158,7 @@ export async function createTerminal({
 
   const folderLabel = () => cwd.split(/[\\/]/).filter(Boolean).pop() || cwd;
 
+<<<<<<< HEAD
   const activity = createActivity({
     progress,
     fill: progressFill,
@@ -156,14 +168,19 @@ export async function createTerminal({
     onStop: () => impl.interrupt(),
   });
 
+=======
+>>>>>>> 59cd7c52025fd43fb035406738230164d3448db3
   /* ============ Modo completo (xterm.js + node-pty) ============ */
 
   function ptyMode() {
     let term = null;
     let fit = null;
     let ptyId = null;
+<<<<<<< HEAD
     let startTimer = null;
     let doneTimer = null;
+=======
+>>>>>>> 59cd7c52025fd43fb035406738230164d3448db3
     const ignored = new Set(); // sessões encerradas por nós (ao trocar de pasta)
 
     const termTheme = () => {
@@ -178,6 +195,7 @@ export async function createTerminal({
       } catch {}
     };
 
+<<<<<<< HEAD
     // Texto da linha do cursor (juntando linhas quebradas) e se o cursor está no fim dela
     function cursorLine() {
       if (!term) return null;
@@ -216,6 +234,8 @@ export async function createTerminal({
       }, 250);
     }
 
+=======
+>>>>>>> 59cd7c52025fd43fb035406738230164d3448db3
     function ensureTerm() {
       if (term) return;
       term = new Terminal({
@@ -243,7 +263,10 @@ export async function createTerminal({
 
       term.onData((data) => {
         if (ptyId !== null) api.ptyWrite(ptyId, data);
+<<<<<<< HEAD
         if (data.includes("\r")) armStart(); // Enter digitado direto no terminal
+=======
+>>>>>>> 59cd7c52025fd43fb035406738230164d3448db3
       });
       term.onResize(({ cols, rows }) => {
         if (ptyId !== null) api.ptyResize(ptyId, cols, rows);
@@ -269,16 +292,23 @@ export async function createTerminal({
 
     api.onPtyData(({ id, data }) => {
       if (ignored.has(id) || (ptyId !== null && id !== ptyId)) return;
+<<<<<<< HEAD
       activity.feed(data);
       term?.write(data, () => {
         if (activity.isBusy()) scheduleDoneCheck();
       });
+=======
+      term?.write(data);
+>>>>>>> 59cd7c52025fd43fb035406738230164d3448db3
     });
 
     api.onPtyExit(({ id }) => {
       if (ignored.has(id) || (ptyId !== null && id !== ptyId)) return;
       ptyId = null;
+<<<<<<< HEAD
       activity.finish();
+=======
+>>>>>>> 59cd7c52025fd43fb035406738230164d3448db3
       term?.write("\r\n[sessão encerrada. Envie um comando para iniciar outra]\r\n");
     });
 
@@ -306,10 +336,14 @@ export async function createTerminal({
           historyIndex = history.length;
         }
         await setOpen(true, false);
+<<<<<<< HEAD
         if (ptyId !== null) {
           api.ptyWrite(ptyId, `${command}\r`);
           armStart();
         }
+=======
+        if (ptyId !== null) api.ptyWrite(ptyId, `${command}\r`);
+>>>>>>> 59cd7c52025fd43fb035406738230164d3448db3
       },
       running: () => false,
       interrupt: () => {
@@ -326,7 +360,10 @@ export async function createTerminal({
           api.ptyKill(ptyId);
           ptyId = null;
           term?.reset();
+<<<<<<< HEAD
           activity.finish();
+=======
+>>>>>>> 59cd7c52025fd43fb035406738230164d3448db3
         }
       },
       refreshTheme() {
@@ -400,7 +437,10 @@ export async function createTerminal({
 
     api.onTermData(({ id, stream, data }) => {
       if (runningId !== null && id !== runningId) return;
+<<<<<<< HEAD
       activity.feed(data);
+=======
+>>>>>>> 59cd7c52025fd43fb035406738230164d3448db3
       print(data, stream === "err" ? "term-err" : "");
     });
 
@@ -409,7 +449,10 @@ export async function createTerminal({
       setRunning(null);
       if (signal) print("Processo interrompido.\n", "term-err");
       else if (code) print(`Processo encerrado com código ${code}.\n`, "term-err");
+<<<<<<< HEAD
       activity.finish({ failed: Boolean(signal || code), detail: signal ? "interrompido" : code ? `código ${code}` : "" });
+=======
+>>>>>>> 59cd7c52025fd43fb035406738230164d3448db3
     });
 
     updatePrompt();
@@ -443,7 +486,10 @@ export async function createTerminal({
           return;
         }
         setRunning(await api.termRun(command, cwd));
+<<<<<<< HEAD
         activity.start();
+=======
+>>>>>>> 59cd7c52025fd43fb035406738230164d3448db3
       },
       running: () => runningId !== null,
       interrupt: () => {
@@ -494,7 +540,10 @@ export async function createTerminal({
 
   return {
     isPty: usePty,
+<<<<<<< HEAD
     isBusy: () => activity.isBusy(),
+=======
+>>>>>>> 59cd7c52025fd43fb035406738230164d3448db3
     setCwd: (path) => impl.setCwd(path),
     focus: () => input.focus(),
     toggle: () => impl.toggle(),

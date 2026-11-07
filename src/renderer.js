@@ -129,7 +129,10 @@ async function init() {
   $("btn-new-file").innerHTML = ui.filePlus;
   $("btn-new-folder").innerHTML = ui.folderPlus;
   $("term-toggle").innerHTML = ui.chevron;
+<<<<<<< HEAD
   $("term-stop").innerHTML = ui.stop;
+=======
+>>>>>>> 59cd7c52025fd43fb035406738230164d3448db3
   $("preview-reload").innerHTML = ui.refresh;
   $("preview-external").innerHTML = ui.external;
   $("preview-close").innerHTML = ui.close;
@@ -156,11 +159,14 @@ async function init() {
     promptEl: $("term-prompt"),
     home: info.home,
     platform: info.platform,
+<<<<<<< HEAD
     progress: $("term-progress"),
     progressFill: $("term-progress-fill"),
     status: $("term-status"),
     stopBtn: $("term-stop"),
     onBusyChange: (busy) => $("btn-terminal").classList.toggle("busy", busy),
+=======
+>>>>>>> 59cd7c52025fd43fb035406738230164d3448db3
     onEscape: () => view.focus(),
   });
 
