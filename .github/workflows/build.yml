@@ -1,0 +1,48 @@
+name: Instaladores e atualizações
+
+# Rodar manualmente: só gera os instaladores (para baixar na aba Actions).
+# Enviar uma tag "v0.5.0" (igual à versão do package.json): gera e PUBLICA no GitHub Releases,
+# que é de onde os aplicativos instalados baixam as atualizações.
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            build: dist:win
+            release: release:win
+          - os: ubuntu-latest
+            build: dist:linux
+            release: release:linux
+          - os: macos-latest
+            build: dist:mac
+            release: release:mac
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: npm run ${{ startsWith(github.ref, 'refs/tags/v') && matrix.release || matrix.build }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: smqide-${{ matrix.os }}
+          if-no-files-found: error
+          path: |
+            release/*.exe
+            release/*.dmg
+            release/*.AppImage
+            release/latest*.yml
