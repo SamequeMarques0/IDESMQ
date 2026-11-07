@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; frame-src http://127.0.0.1:*"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SMQIDE</title>
+    <link rel="stylesheet" href="../dist/renderer.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <aside id="sidebar" hidden>
+        <div class="side-head">
+          <span id="folder-name" class="folder-name"></span>
+          <button id="btn-new-file" class="icon-btn" title="Novo arquivo"></button>
+          <button id="btn-new-folder" class="icon-btn" title="Nova pasta"></button>
+          <button id="btn-refresh" class="icon-btn" title="Atualizar pasta"></button>
+        </div>
+        <div id="tree"></div>
+        <div id="resizer-sidebar" class="resizer-v"></div>
+      </aside>
+
+      <section id="main">
+        <header class="tabbar">
+          <div id="tabs"></div>
+        </header>
+        <main id="editor"></main>
+        <section id="terminal">
+          <div id="resizer-term" class="resizer-h"></div>
+          <div id="term-out" hidden></div>
+          <div id="term-xterm" hidden></div>
+          <div class="term-bar">
+            <div id="term-progress" class="term-progress" hidden><div id="term-progress-fill"></div></div>
+            <span id="term-prompt"></span>
+            <input
+              id="term-input"
+              type="text"
+              spellcheck="false"
+              autocomplete="off"
+              placeholder="Digite um comando e pressione Enter"
+            />
+            <span id="term-status" class="term-status" hidden></span>
+            <button id="term-stop" class="icon-btn" title="Interromper o comando (Ctrl+C)" hidden></button>
+            <button id="term-toggle" class="icon-btn" title="Mostrar ou ocultar o terminal"></button>
+          </div>
+        </section>
+      </section>
+
+      <aside id="preview" hidden>
+        <div id="resizer-preview" class="resizer-l"></div>
+        <div class="preview-head">
+          <span id="preview-url"></span>
+          <button id="preview-reload" class="icon-btn" title="Recarregar"></button>
+          <button id="preview-external" class="icon-btn" title="Abrir no navegador"></button>
+          <button id="preview-close" class="icon-btn" title="Fechar"></button>
+        </div>
+        <div id="preview-body"></div>
+      </aside>
+
+      <nav id="rail">
+        <button id="btn-file" class="rail-btn" title="Arquivo"></button>
+        <button id="btn-folder" class="rail-btn" title="Pasta lateral (Ctrl+B)"></button>
+        <span class="rail-sep"></span>
+        <button id="btn-live" class="rail-btn" title="Iniciar Live Server"></button>
+        <button id="btn-preview" class="rail-btn" title="Pré-visualização na IDE"></button>
+        <button id="btn-terminal" class="rail-btn" title="Terminal (Ctrl+`)"></button>
+        <span class="spacer"></span>
+        <button id="btn-macros" class="rail-btn" title="Atalhos e macros (aspas, textos…)"></button>
+        <button id="btn-theme" class="rail-btn" title="Temas, ícones e Live Server"></button>
+      </nav>
+
+      <footer class="statusbar">
+        <span id="status-pos">Ln 1, Col 1</span>
+        <button id="status-live" class="status-link" hidden></button>
+        <span class="spacer"></span>
+        <span id="status-lang">Texto</span>
+      </footer>
+    </div>
+    <script src="../dist/renderer.js"></script>
+  </body>
+</html>
