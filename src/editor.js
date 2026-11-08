@@ -8,6 +8,7 @@ import { html } from "@codemirror/lang-html";
 import { css } from "@codemirror/lang-css";
 import { javascript } from "@codemirror/lang-javascript";
 import { json } from "@codemirror/lang-json";
+import { openSearchPanel } from "@codemirror/search";
 import { abbreviationAt, expandWithIndent } from "./emmet.js";
 
 /* ---------- Aparência (as cores vêm das variáveis CSS do tema) ---------- */
@@ -29,7 +30,7 @@ function cmTheme(dark) {
       "&.cm-focused .cm-matchingBracket": { backgroundColor: "var(--selection)", outline: "none" },
       ".cm-placeholder": { color: "var(--muted)" },
       ".cm-panels": { backgroundColor: "var(--bg-chrome)", color: "var(--fg)" },
-      ".cm-panels.cm-panels-bottom": { borderTop: "1px solid var(--line)" },
+      ".cm-panels.cm-panels-bottom": { borderTop: "1px solid var(--line)", borderBottom: "none" },
       ".cm-panels.cm-panels-top": { borderBottom: "1px solid var(--line)" },
       ".cm-textfield": { backgroundColor: "var(--bg)", border: "1px solid var(--line)", color: "var(--fg)" },
       ".cm-button": {
@@ -38,7 +39,50 @@ function cmTheme(dark) {
         border: "1px solid var(--line)",
         color: "var(--fg)",
       },
-      ".cm-searchMatch": { backgroundColor: "rgba(230,180,85,0.25)" },
+      /* Barra de busca (Ctrl+F): uma linha, com os botões ao lado do campo */
+      ".cm-panel.cm-search": {
+        padding: "6px 34px 6px 8px",
+        borderTop: "1px solid var(--line)",
+        backgroundColor: "var(--bg-chrome)",
+      },
+      ".cm-panel.cm-search br": { display: "none" },
+      ".cm-panel.cm-search .cm-textfield": {
+        height: "26px",
+        margin: "0 6px 0 0",
+        padding: "0 8px",
+        borderRadius: "5px",
+        font: "inherit",
+        fontSize: "12.5px",
+        outline: "none",
+      },
+      ".cm-panel.cm-search .cm-textfield:focus": { borderColor: "var(--accent)" },
+      ".cm-panel.cm-search [name=search]": { width: "200px", textTransform: "capitalize" },
+      ".cm-panel.cm-search [name=replace]": { width: "160px", textTransform: "capitalize" },
+      /* match case, regexp e by word: fora da barra */
+      ".cm-panel.cm-search label:has(input[type=checkbox])": { display: "none" },
+      ".cm-panel.cm-search .cm-button": {
+        height: "26px",
+        margin: "0 6px 0 0",
+        padding: "0 10px",
+        borderRadius: "5px",
+        fontSize: "12px",
+        cursor: "pointer",
+      },
+      ".cm-panel.cm-search .cm-button:hover": { backgroundColor: "var(--selection)" },
+      ".cm-panel.cm-search [name=close]": {
+        top: "8px",
+        right: "8px",
+        width: "20px",
+        height: "20px",
+        color: "var(--muted)",
+        fontSize: "15px",
+        lineHeight: "18px",
+        cursor: "pointer",
+        borderRadius: "4px",
+      },
+      ".cm-panel.cm-search [name=close]:hover": { color: "var(--fg)", backgroundColor: "var(--hover)" },
+      ".cm-searchMatch": { backgroundColor: "rgba(230,180,85,0.25)", borderRadius: "2px" },
+      ".cm-searchMatch.cm-searchMatch-selected": { backgroundColor: "rgba(230,180,85,0.55)" },
       ".cm-tooltip": { backgroundColor: "var(--bg-chrome)", border: "1px solid var(--line)", color: "var(--fg)" },
       ".cm-tooltip-autocomplete > ul > li[aria-selected]": { backgroundColor: "var(--selection)", color: "var(--fg)" },
     },
@@ -164,6 +208,33 @@ const emmetKeymap = keymap.of([
   { key: "Ctrl-Enter", run: wrapSelection },
 ]);
 
+// Os textos da barra de busca (o CodeMirror usa "Find", "Replace", "next"…)
+const SEARCH_PHRASES = {
+  Find: "Buscar",
+  Replace: "Alterar",
+  next: "Próximo",
+  previous: "Anterior",
+  all: "Todos",
+  replace: "Alterar",
+  "replace all": "Alterar todos",
+  close: "Fechar",
+};
+const searchPhrases = EditorState.phrases.of(SEARCH_PHRASES);
+
+// Coloca a primeira letra maiúscula no que foi digitado nos campos de busca e de alteração
+export function capitalizeFields(view) {
+  const fields = view.dom.querySelectorAll('.cm-search input[name="search"], .cm-search input[name="replace"]');
+  for (const field of fields) {
+    const value = field.value;
+    const capitalized = value.charAt(0).toUpperCase() + value.slice(1);
+    if (value && capitalized !== value) field.value = capitalized;
+  }
+}
+
+const searchKeymap = keymap.of([
+  { key: "Mod-f", run: (view) => (openSearchPanel(view), capitalizeFields(view), true) },
+]);
+
 export function makeState(text, path, onUpdate) {
   return EditorState.create({
     doc: text,
@@ -174,6 +245,8 @@ export function makeState(text, path, onUpdate) {
       themeCompartment.of(cmTheme(darkMode)),
       syntaxHighlighting(highlight),
       langCompartment.of(detectLanguage(path).ext()),
+      searchPhrases,
+      searchKeymap,
       placeholder("Ctrl+O abre um arquivo. Ctrl+Shift+O abre uma pasta."),
       EditorView.updateListener.of(onUpdate),
     ],

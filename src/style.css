@@ -472,6 +472,11 @@ body.dragging iframe { pointer-events: none; }
 .dialog-title { font-weight: 600; }
 .dialog-actions { display: flex; justify-content: flex-end; gap: 8px; }
 
+/* Novo arquivo / Nova pasta: um campo e os dois botões na mesma linha */
+.prompt-dialog { gap: 12px; }
+.prompt-dialog .dialog-input { padding: 9px 10px; }
+.prompt-dialog .btn { min-width: 92px; padding: 7px 16px; }
+
 .dialog-input,
 .palette-input {
   width: 100%;
