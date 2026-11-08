@@ -1,13 +1,14 @@
 import { EditorState, Compartment } from "@codemirror/state";
 import { EditorView, keymap, placeholder } from "@codemirror/view";
 import { basicSetup } from "codemirror";
-import { indentWithTab } from "@codemirror/commands";
+import { indentWithTab, indentLess } from "@codemirror/commands";
 import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { tags as t } from "@lezer/highlight";
 import { html } from "@codemirror/lang-html";
 import { css } from "@codemirror/lang-css";
 import { javascript } from "@codemirror/lang-javascript";
 import { json } from "@codemirror/lang-json";
+import { abbreviationAt, expandWithIndent } from "./emmet.js";
 
 /* ---------- Aparência (as cores vêm das variáveis CSS do tema) ---------- */
 
@@ -92,11 +93,83 @@ export function setEditorDark(dark) {
 export const themeEffect = (dark) => themeCompartment.reconfigure(cmTheme(dark));
 export const languageEffect = (path) => langCompartment.reconfigure(detectLanguage(path).ext());
 
+/* ---------- Emmet: Tab expande a abreviação ---------- */
+
+// O CodeMirror troca de foco quando um comando devolve false. Aqui devolvemos false
+// só quando não há o que expandir (aí o Tab continua indentando ou saindo do editor).
+export function expandAbbreviation(view) {
+  const { state } = view;
+  const ranges = state.selection.ranges;
+  if (ranges.length !== 1) return false;
+  const { from, to } = ranges[0];
+  const line = state.doc.lineAt(from);
+  const found = abbreviationAt(state.doc, from, line.from);
+  if (!found) return false;
+  const indent = /^[ \t]*/.exec(line.text)[0];
+  const result = expandWithIndent(found.text, indent);
+  if (!result) return false;
+  view.dispatch({
+    changes: { from: found.from, to, insert: result.text },
+    selection: { anchor: found.from + result.cursor },
+    scrollIntoView: true,
+    userEvent: "input.complete",
+  });
+  return true;
+}
+
+// Shift+Tab: desindenta a linha, ou expande a abreviação quando ela está selecionada
+function unindentOrExpand(view) {
+  const { state } = view;
+  const range = state.selection.main;
+  const text = state.sliceDoc(range.from, range.to);
+  if (!range.empty && !/[\s]/.test(text)) {
+    const result = expandWithIndent(text, /^[ \t]*/.exec(state.doc.lineAt(range.from).text)[0]);
+    if (result) {
+      view.dispatch({
+        changes: { from: range.from, to: range.to, insert: result.text },
+        selection: { anchor: range.from + result.cursor },
+        scrollIntoView: true,
+        userEvent: "input.complete",
+      });
+      return true;
+    }
+  }
+  return indentLess(view);
+}
+
+// Ctrl+Enter abre o que está selecionado por fora: div>.caixa -> <div class="caixa"></div>
+function wrapSelection(view) {
+  const { state } = view;
+  const range = state.selection.main;
+  if (range.empty) return false;
+  const selected = state.sliceDoc(range.from, range.to);
+  const tag = /^[a-zA-Z][\w-]*/.exec(selected.trim())?.[0] ?? "div";
+  const open = `<${tag}>`;
+  const close = `</${tag}>`;
+  view.dispatch({
+    changes: [
+      { from: range.from, insert: open },
+      { from: range.to, insert: close },
+    ],
+    selection: { anchor: range.from + open.length, head: range.to + open.length },
+    scrollIntoView: true,
+    userEvent: "input.complete",
+  });
+  return true;
+}
+
+const emmetKeymap = keymap.of([
+  { key: "Tab", run: expandAbbreviation },
+  { key: "Shift-Tab", run: unindentOrExpand },
+  { key: "Ctrl-Enter", run: wrapSelection },
+]);
+
 export function makeState(text, path, onUpdate) {
   return EditorState.create({
     doc: text,
     extensions: [
       basicSetup,
+      emmetKeymap, // antes do indentWithTab: o Tab expande a abreviação e, sem abreviação, indenta
       keymap.of([indentWithTab]),
       themeCompartment.of(cmTheme(darkMode)),
       syntaxHighlighting(highlight),

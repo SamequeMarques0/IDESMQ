@@ -17,6 +17,12 @@ Base: Electron + CodeMirror 6, tudo em JavaScript.
   - CSS é trocado sem recarregar; HTML sem `<script>` é atualizado sem recarregar; o resto recarrega
   - A barra de status mostra quantos navegadores estão conectados
 - **Pré-visualização dentro da IDE** (botão ao lado do ▶): painel lateral que acompanha o HTML aberto
+- **Emmet no editor**: escreva a abreviação e pressione **Tab**
+  - `html5` + Tab (ou `!` + Tab) cria a estrutura completa do HTML5; `!!!` + Tab cria só o `<!DOCTYPE html>`
+  - `div`, `p`, `.caixa`, `#topo`, `ul>li*3`, `a{texto}`, `div>p+span`, `button:btn`, `input:text`, `link:css`…
+  - **Shift+Tab** desindenta a linha (ou expande a abreviação quando ela está selecionada)
+  - **Ctrl+Enter** envolve o texto selecionado com uma tag: `div>` + Ctrl+Enter em "olá" vira `<div>olá</div>`
+  - Sem abreviação, o Tab continua indentando normalmente
 - **Terminal completo** (xterm.js + node-pty) na barra inferior; o campo de comando envia linhas para ele
   - Sem node-pty, cai automaticamente num modo simples (um comando por vez)
 - **Atualização automática**: verifica ao abrir, pergunta, baixa, instala e reinicia (veja a seção abaixo)
@@ -41,6 +47,9 @@ Base: Electron + CodeMirror 6, tudo em JavaScript.
 | Ctrl+Shift+P | Paleta de comandos |
 | Ctrl+B | Mostrar ou ocultar a pasta lateral |
 | Ctrl+` | Ir para o campo de terminal |
+| Tab | Expande a abreviação do Emmet (sem abreviação, indenta) |
+| Shift+Tab | Desindenta a linha (ou expande a abreviação selecionada) |
+| Ctrl+Enter | Envolve a seleção com uma tag |
 
 Com o foco dentro do terminal, os atalhos pertencem ao shell (Ctrl+W, Ctrl+B etc. não são capturados pela IDE).
 
