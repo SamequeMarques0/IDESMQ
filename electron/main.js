@@ -15,7 +15,7 @@ const iconFile = (name) => {
 const appIcon = iconFile(process.platform === "win32" ? "256.ico" : "256.png");
 
 // Agrupa o ícone do app na barra de tarefas do Windows
-if (process.platform === "win32") app.setAppUserModelId("com.samequemarques.smqide");
+if (process.platform === "win32") app.setAppUserModelId("com.samequemarques.smcode");
 
 // Terminal completo: opcional. Se o node-pty não carregar, a IDE usa o terminal simples.
 let nodePty = null;

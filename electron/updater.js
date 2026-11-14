@@ -109,7 +109,7 @@ function createUpdater({ getWindow, send, hasUnsaved, prepareToQuit }) {
       const { response } = await box({
         type: "info",
         title: "Atualização disponível",
-        message: `Uma nova versão do SMQIDE está disponível: ${info.version}`,
+        message: `Uma nova versão do SMCODE está disponível: ${info.version}`,
         detail:
           `Você está na versão ${app.getVersion()}. ` +
           (selfUpdate

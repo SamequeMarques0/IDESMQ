@@ -58,7 +58,7 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "SMQIDE",
+      "shortcutName": "SMCODE",
       "installerIcon": "assets/256.ico",
       "uninstallerIcon": "assets/256.ico",
       "installerHeaderIcon": "assets/256.ico"
@@ -83,7 +83,7 @@
       {
         "provider": "github",
         "owner": "SamequeMarques0",
-        "repo": "IDESMQ",
+        "repo": "SMCODE",
         "releaseType": "release"
       }
     ]
