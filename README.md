@@ -1,4 +1,4 @@
-# SMQIDE
+# SMCODE
 
 IDE leve e minimalista para desenvolvimento front end (HTML, CSS e JS).
 Base: Electron + CodeMirror 6, tudo em JavaScript.

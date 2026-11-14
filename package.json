@@ -1,9 +1,9 @@
 {
-  "name": "IDESMQ",
-  "productName": "IDESMQ",
-  "version": "0.5.8",
+  "name": "SMCODE",
+  "productName": "SMCODE",
+  "version": "0.5.9",
   "description": "IDE leve e minimalista para desenvolvimento front end",
-  "author": "samequemarques",
+  "author": "Sameque Marques",
   "license": "UNLICENSED",
   "private": true,
   "main": "electron/main.js",
@@ -23,7 +23,7 @@
   },
   "build": {
     "appId": "com.samequemarques.idesmq",
-    "productName": "IDESMQ",
+    "productName": "SMCODE",
     "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
     "directories": {
       "output": "release",
